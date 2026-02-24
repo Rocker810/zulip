@@ -4,6 +4,7 @@ import copy
 import logging
 import time
 from collections.abc import Callable, Collection, Iterable, Sequence
+from dataclasses import asdict
 from typing import Any, Literal
 
 from django.conf import settings
@@ -296,7 +297,9 @@ def fetch_initial_state_data(
         # account, we'd maybe need to store their state using cookies
         # or local storage, rather than in the database.
         state["onboarding_steps"] = (
-            [] if user_profile is None else get_next_onboarding_steps(user_profile)
+            []
+            if user_profile is None
+            else [asdict(step) for step in get_next_onboarding_steps(user_profile)]
         )
         state["navigation_tour_video_url"] = settings.NAVIGATION_TOUR_VIDEO_URL
 
